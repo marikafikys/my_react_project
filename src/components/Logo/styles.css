@@ -1,0 +1,10 @@
+.logo {
+	display: flex;
+	align-items: center;
+	max-width: 40px;
+	font-size: 25px;
+	font-weight: 600;
+	padding: 10px;
+	text-decoration: none;
+	color: #000000;
+}

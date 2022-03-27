@@ -1,0 +1,17 @@
+.header {
+	width: 100%;
+	background-color: var(--main-lighter);
+	padding: 12px;
+
+}
+
+.wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 80px;
+}
+
+/* .menu button {
+	margin-left: 12px;
+} */

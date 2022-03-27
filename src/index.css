@@ -1,0 +1,38 @@
+@import "~normalize.css";
+
+:root {
+	--main-color: #4ddbff;
+	--main-darker: #09738d;
+	--main-lighter: #aeebfa;
+	--button-color: #9f33f8;
+	--button-darker: #6e0dbd;
+}
+
+* {
+	box-sizing: inherit;
+}
+
+html {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Comfortaa', cursive;
+}
+
+.container {
+	max-width: 1000px;
+	width: 95%;
+	margin: 0 auto;
+	padding: 0 16px;
+}
+
+img {
+	max-width: 100%;
+}
+
+.content__about {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}

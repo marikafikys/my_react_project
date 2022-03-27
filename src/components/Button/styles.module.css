@@ -1,0 +1,13 @@
+@import '~antd/dist/antd.css';
+
+.btn {
+	padding: 16px;
+	margin: 16px;
+	border: none;
+	border-radius: 6px;
+	background: var(--button-darker);
+}
+
+.btn:hover {
+	background: var(--button-color);
+}
