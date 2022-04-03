@@ -1,16 +1,10 @@
 @import '~antd/dist/antd.css';
 
-.post {
-	border: 1px solid var(--main-darker);
-	background-color: var(--main-lighter);
-	border-radius: 6px;
-	padding: 16px;
-}
 
-.post h3 {
-	font-size: 18px;
-	padding-bottom: 16px;
-	border-bottom: 1px solid var(--main-darker);
+.wrapper {
+	height: 320px;
+	overflow: hidden;
+	margin-bottom: 20px;
 }
 
 .author {
@@ -29,8 +23,14 @@
 	font-weight: 600;
 }
 
+.image {
+	width: 100%;
+	margin-top: 10px;
+}
+
 .text {
-	margin: 20px 0;
+	margin-top: 20px;
+	
 }
 
 .tags {
@@ -41,3 +41,23 @@
 .tag {
 	margin-left: 10px;
 }
+
+.buttons {
+	display: flex;
+	justify-content: space-between;
+}
+
+.like {
+	display: flex;
+	align-items: center;
+	background-color: #f4f0f0;
+	border-radius: 5px;
+	padding-right: 8px;
+}
+
+.likeAmount {
+	font-size: 14px;
+	font-weight: 600;
+}
+
+
