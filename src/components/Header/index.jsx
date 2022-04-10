@@ -1,11 +1,16 @@
 import { Button } from "antd";
-import React from "react";
+import React, { useContext } from "react";
 import { Logo } from "../Logo";
 import s from "./styles.module.css";
 import cn from 'classnames';
-import { FileOutlined, GithubOutlined, HomeOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import { HeartOutlined, SmileOutlined , HomeOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import { CurrentUserContext } from "../../context/currentUserContext";
+import { useNavigate } from "react-router-dom";
 
-export const Header = ({user, onUpdateUser, onUpdateAvatar}) => {
+export const Header = ({onUpdateUser, onUpdateAvatar, handleHomePage, handleFavorites, handleMyPosts}) => {
+
+	const currentUser = useContext(CurrentUserContext);
+	const navigate = useNavigate();
 
 	function handleClickEditUser(e) {
 		e.preventDefault();
@@ -22,15 +27,15 @@ export const Header = ({user, onUpdateUser, onUpdateAvatar}) => {
 			<div className={cn(s.wrapper, 'container')}>
 				<Logo/>
 				<div className={s.menu}>
-					<Button type="link">{<HomeOutlined />}Home</Button>
-					<Button type="link">{<FileOutlined />}Remix Docs</Button>
-					<Button type="link">{<GithubOutlined />}GitHub</Button>
+					<Button type="link" onClick={handleHomePage}>{<HomeOutlined />}Home</Button>
+					<Button type="link" onClick={handleFavorites}>{<HeartOutlined />}Favorites</Button>
+					<Button type="link" onClick={handleMyPosts}>{<SmileOutlined />}My posts</Button>
 				</div>
 				<div className={s.user}>
-					{user.avatar && <img src={user.avatar} alt="аватар" className={s.avatar}/>}
+					{currentUser.avatar && <img src={currentUser.avatar} alt="аватар" className={s.avatar}/>}
 					<div className={s.userInfo}>
-						{user.email && <span><MailOutlined style={{color:'blue'}}/> {user.email}</span>}
-						{user.name && <span><UserOutlined style={{color:'blue'}}/> {user.name}</span>}
+						{currentUser.email && <span><MailOutlined style={{color:'blue'}}/> {currentUser.email}</span>}
+						{currentUser.name && <span><UserOutlined style={{color:'blue'}}/> {currentUser.name}</span>}
 					</div>
 					<div className={s.buttons}>
 						<Button 

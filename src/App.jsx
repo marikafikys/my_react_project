@@ -1,38 +1,79 @@
-import { Button, Spin } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
-import { PostsList } from './components/PostsList';
 import api from './utils/Api';
-
-// const elementsOnPage = 9;
-// let fullData = [];
-// let pageData = [];
-let countPosts = 1;
-// let currentPostPage = 1;
+import { PostPage } from './pages/PostPage/PostPage';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { AllPostPage } from './pages/AllPostsPage/AllPostPage';
+import { CurrentUserContext } from './context/currentUserContext';
+import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage';
 
 
 export const App = () => {
+	const [currentUser, setCurrentUser] = useState({});
+	const [isLoading, setIsLoading] = useState(false);
 	const [allPosts, setAllPosts] = useState([]);
 	const [postsPerPage, setPostsPerPage] = useState(9);
 	const [pagePosts, setPagePosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [currentUser, setCurrentUser] = useState({});
-	// const [isLoading, setIsLoading] = useState(false); - стейт для спиннера
+	const [pageMode, setPageMode] = useState("home");
+
+	const navigate = useNavigate();
+	let countPosts = 1;
 
 	useEffect(() => {
+		setIsLoading(true);
 		Promise.all([api.getPostsList(), api.getUserInfo()])
 			.then(([allPostsData, userData]) => {
-				setAllPosts(allPostsData)
-				setPagePosts(allPostsData.slice(0, postsPerPage))
+				setAllPosts(allPostsData);
+				setPagePosts(allPostsData.slice(0, postsPerPage));
 				setCurrentUser(userData);
 			})
+			.catch(err => console.log(err))
+			.finally(() => setIsLoading(false))
 	}, [])
-	console.log("Я делаю рендер");
+	
 	countPosts = allPosts.length;
+	
 
 	const handleClickCreate = () => {
 		console.log('Кнопка нажата');
+	}
+
+	function handleHomePage() {
+		setPageMode("home");
+		api.getPostsList()
+			.then(allPostsData => {
+				setAllPosts(allPostsData);
+				setPagePosts(allPostsData.slice(0, postsPerPage))
+			})
+		navigate("/");
+	}
+
+	function filterFavoritesData (data) {
+		return data.filter(el => el.likes.some(id => id === currentUser._id));
+	}
+
+	function handleFavorites() {
+		setPageMode("favorites");
+		const filteredFavoritesData = filterFavoritesData(allPosts);
+		let pageFavPosts = filteredFavoritesData.slice(0, postsPerPage);
+		setAllPosts(filteredFavoritesData);
+		setPagePosts(pageFavPosts);
+		navigate("/");
+	}
+
+	function filterMyPostsData (data) {
+		return data.filter(el => el.author._id === currentUser._id);
+	}
+
+	function handleMyPosts () {
+		setPageMode("myPosts");
+		let filteredMyPostsData = filterMyPostsData(allPosts);
+		let pageMyPosts = filteredMyPostsData.slice(0, postsPerPage);
+		setAllPosts(filteredMyPostsData);
+		setPagePosts(pageMyPosts);
+		navigate("/");
 	}
 
 	function onChangePage(newPageData, current, pageSize) {
@@ -91,55 +132,70 @@ export const App = () => {
 	function handleDeletePost({_id}) {
 		const access = confirm('Подтвердите удаление поста');
 		if(access){
+			navigate("/");
 			api.deletePost(_id)
 				.then(deletedPost => {
 					api.getPostsList()
 						.then(data => {
-							setPagePosts(updatePageDelete(data, currentPage, postsPerPage));
-							countPosts = data.length;
+							let currentData = data;
+							if(pageMode === "home") {/* currentData не меняется */};
+							if (pageMode === "favorites") {currentData = filterFavoritesData(data)};
+							if (pageMode === "myPosts") {currentData = filterMyPostsData(data)};
+							setPagePosts(updatePageDelete(currentData, currentPage, postsPerPage));
+							countPosts = currentData.length;
 							setCurrentPage(updateCurrentPage(countPosts, currentPage, postsPerPage));
-							setAllPosts(data);
+							setAllPosts(currentData);
 						})
-				});
+				})
 		}
 	}
 
 	return (
-		<>
+		<CurrentUserContext.Provider value={currentUser}>
 			<Header 
-				user={currentUser} 
 				onUpdateUser={handleUpdateUser}
 				onUpdateAvatar={handleUpdateAvatar}
+				handleHomePage={handleHomePage}
+				handleFavorites={handleFavorites}
+				handleMyPosts={handleMyPosts}
 			/>
 			<main className='container content'>
-			/* Breadcrumb */
-			<div className='content__about'>
-				<div className='content__greeting'>
-					<h2>Welcome to Our Site!</h2>
-					<p>We're stoked that you're here. 🥳</p>
-				</div>
-				<Button type='primary'
-					onClick={handleClickCreate}
-					>Create post
-				</Button>
-			</div>
-			<div className='content__posts'>
-				{/* <Spin tip="Loading..."/> */}
-				<PostsList 
-					onChangePage={onChangePage}
-					pagePosts={pagePosts}
-					allPosts={allPosts}  
-					postsPerPage={postsPerPage}
-					onPostLike={handlePostLike}
-					currentUser={currentUser}
-					handleDeletePost={handleDeletePost}
-					countPosts={countPosts}
-					currentPage = {currentPage} // отправляю индекс текущей страницы для корректной работы пагинации при удалении постов
-					/>
-			</div>
-			
+				
+				<Routes>
+
+					<Route path='/' element={
+						<AllPostPage 
+							isLoading={isLoading}  
+							data={allPosts} 
+							postsPerPage={postsPerPage} 
+							pagePosts={pagePosts} 
+							currentPage={currentPage} 
+							handlePostLike={handlePostLike} 
+							handleDeletePost={handleDeletePost} 
+							onChangePage={onChangePage} 
+							countPosts={countPosts} 
+							handleClickCreate={handleClickCreate}
+							pageMode={pageMode}
+						/>
+					}/>
+
+					<Route path='/post/:postID' element={
+						<PostPage  
+							isLoading={isLoading} 
+							handlePostLike={handlePostLike} 
+							handleDeletePost={handleDeletePost}
+						/>
+					}/>
+
+					<Route path="*" element={
+						<NotFoundPage/>
+					}/>
+
+				</Routes>
+
+
 			</main>
 			<Footer/>
-		</>
+		</CurrentUserContext.Provider>
 	)
 }

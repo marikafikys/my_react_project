@@ -1,0 +1,19 @@
+.error {
+	font-size: 70px;
+	font-weight: 600;
+	color: crimson;
+}
+
+.notFound {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: auto;
+	height: 100%;
+}
+
+.title {
+	font-weight: 600;
+	font-size: 32px;
+	line-height: 1.2;
+}
