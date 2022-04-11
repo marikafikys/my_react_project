@@ -37,11 +37,6 @@
 	margin: 20px 0;
 }
 
-.button_back {
-	font-size: 20px;
-	margin-top: 12px;
-}
-
 .buttons {
 	display: flex;
 	justify-content: flex-start;

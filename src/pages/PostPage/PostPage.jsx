@@ -6,7 +6,7 @@ import { useApi } from '../../hooks/useApi';
 import api from '../../utils/Api';
 
 
-export const PostPage = ({handlePostLike, handleDeletePost}) => {
+export const PostPage = ({handlePostLike, handleDeletePost, handleClickEdit}) => {
 	const  { postID } = useParams();
 
 	const handler = useCallback(() => {
@@ -20,7 +20,8 @@ export const PostPage = ({handlePostLike, handleDeletePost}) => {
 					<Spinner isLoading={loading}/>
 					{selectedPost && <SelectedPost {...selectedPost} 
 					onPostLike={handlePostLike} 
-					onDeletePost={handleDeletePost}/>}
+					onDeletePost={handleDeletePost}
+					onEditPost={handleClickEdit}/>}
 					{error && <NotFound title={"Page not found"} buttonText={"To Home Page"} buttonAction={() => navigate("/")}/>}
 				</div>
 	);

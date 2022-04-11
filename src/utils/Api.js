@@ -71,6 +71,28 @@ class Api {
 			},
 		}).then(onResponce)
 	}
+
+	createPost(postData) {
+		return fetch(`${this._baseUrl}/posts`, {
+			method: "POST",
+			headers: {
+				authorization: this._token,
+				"Content-type": "application/json"
+			},
+			body: JSON.stringify(postData)
+		}).then(onResponce)
+	}
+
+	editPost(postData, postId) {
+		return fetch(`${this._baseUrl}/posts/${postId}`, {
+			method: "PATCH",
+			headers: {
+				authorization: this._token,
+				"Content-type": "application/json"
+			},
+			body: JSON.stringify(postData)
+		}).then(onResponce)
+	}
 }
 
 const config = {

@@ -5,18 +5,15 @@ import dayjs from "dayjs";
 import { HeartOutlined, HeartFilled, DeleteTwoTone, EditTwoTone, MessageTwoTone, ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { CurrentUserContext } from "../../context/currentUserContext";
+import { ButtonBack } from "../ButtonBack/ButtonBack";
 
 
-export const SelectedPost = ({ image, likes, tags, _id, title, text, created_at, updated_at, onPostLike, onDeletePost, author }) => {
+export const SelectedPost = ({ image, likes, tags, _id, title, text, created_at, updated_at, onPostLike, onDeletePost, onEditPost, author }) => {
 
 	const currentUser = useContext(CurrentUserContext);
 
 	const navigate = useNavigate();
 	const isLiked = likes?.some(id => id === currentUser._id);
-
-	function handleClickBack() {
-		navigate(-1);
-	}
 
 	function handlelikeClick() {
 		onPostLike({_id, likes});
@@ -26,9 +23,13 @@ export const SelectedPost = ({ image, likes, tags, _id, title, text, created_at,
 		onDeletePost({_id})
 	}
 
+	function handleEditClik() {
+		onEditPost({_id})
+	}
+
 	return (
 		<div className="container">
-			<Button type="link" className={s.button_back} onClick={handleClickBack}><ArrowLeftOutlined />Back</Button>
+			<ButtonBack/>
 			<h1 className={s.postTitle}>{title}</h1>
 			<div className={s.content}>
 
@@ -51,9 +52,9 @@ export const SelectedPost = ({ image, likes, tags, _id, title, text, created_at,
 		 			</Timeline>
 
 					 <div className={s.buttons}>
-					 	<Button className={s.button} type="text" onClick={handleDeleteClik} icon={<MessageTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Comment</Button>
+					 	<Button className={s.button} type="text" onClick={() => console.log("Комментирование поста")} icon={<MessageTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Comment</Button>
 						{author._id == currentUser._id && <Button className={s.button} type="text" onClick={handleDeleteClik} icon={<DeleteTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Delete</Button>}
-						{author._id == currentUser._id && <Button className={s.button} type="text" onClick={handleDeleteClik} icon={<EditTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Edit</Button>}
+						{author._id == currentUser._id && <Button className={s.button} type="text" onClick={handleEditClik} icon={<EditTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Edit</Button>}
 					</div>
 
 

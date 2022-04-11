@@ -6,7 +6,7 @@ export const Logo = () => {
 	return (
 		<a href="/" className="logo">
 			<img src={logo} alt="logo" className="logo__pic"/>
-			Remix
+			Notes
 		</a>	
 	)
 }

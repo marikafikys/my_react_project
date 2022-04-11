@@ -7,7 +7,8 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { AllPostPage } from './pages/AllPostsPage/AllPostPage';
 import { CurrentUserContext } from './context/currentUserContext';
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage';
-
+import { CreatePostPage } from './pages/CreatePostPage/CreatePostPage';
+import { EditPostPage } from './pages/EditPostPage/EditPostPage';
 
 export const App = () => {
 	const [currentUser, setCurrentUser] = useState({});
@@ -35,11 +36,6 @@ export const App = () => {
 	
 	countPosts = allPosts.length;
 	
-
-	const handleClickCreate = () => {
-		console.log('Кнопка нажата');
-	}
-
 	function handleHomePage() {
 		setPageMode("home");
 		api.getPostsList()
@@ -70,6 +66,7 @@ export const App = () => {
 	function handleMyPosts () {
 		setPageMode("myPosts");
 		let filteredMyPostsData = filterMyPostsData(allPosts);
+		// console.log(filteredMyPostsData);
 		let pageMyPosts = filteredMyPostsData.slice(0, postsPerPage);
 		setAllPosts(filteredMyPostsData);
 		setPagePosts(pageMyPosts);
@@ -150,6 +147,50 @@ export const App = () => {
 		}
 	}
 
+	const handleClickCreate = () => {
+		navigate("/create");
+	}
+
+	function handleCreatePost(data) {
+		api.createPost(data)
+			.then((newPost) => {
+				navigate(`/post/${newPost._id}`);
+				api.getPostsList()
+				.then(data => {
+					let currentData = data;
+					if(pageMode === "home") {/* currentData не меняется */};
+					if (pageMode === "favorites") {currentData = filterFavoritesData(data)};
+					if (pageMode === "myPosts") {currentData = filterMyPostsData(data)};
+					setPagePosts(updatePageDelete(currentData, currentPage, postsPerPage));
+					countPosts = currentData.length;
+					setCurrentPage(updateCurrentPage(countPosts, currentPage, postsPerPage));
+					setAllPosts(currentData);
+				})
+			})
+	}
+
+	const handleClickEdit = ({_id}) => {
+		navigate(`/post/${_id}/edit`);
+	}
+
+	function handleEditPost(data, id) {
+		// console.log(data, id);
+
+		api.editPost(data, id)
+			.then((editPost) => {
+				navigate(`/post/${id}`);
+				api.getPostsList()
+				.then(data => {
+					let currentData = data;
+					if(pageMode === "home") {/* currentData не меняется */};
+					if (pageMode === "favorites") {currentData = filterFavoritesData(data)};
+					if (pageMode === "myPosts") {currentData = filterMyPostsData(data)};
+					setPagePosts(updatePageDelete(currentData, currentPage, postsPerPage));
+					setAllPosts(currentData);
+				})
+			})
+	}
+
 	return (
 		<CurrentUserContext.Provider value={currentUser}>
 			<Header 
@@ -184,7 +225,19 @@ export const App = () => {
 							isLoading={isLoading} 
 							handlePostLike={handlePostLike} 
 							handleDeletePost={handleDeletePost}
+							handleClickEdit={handleClickEdit}
 						/>
+					}/>
+
+					<Route path='/post/:postID/edit' element={
+						<EditPostPage   
+							editPost={handleEditPost}
+						/>
+					}/>
+
+					<Route path='/create' element={
+						<CreatePostPage
+						createNewPost={handleCreatePost}/>
 					}/>
 
 					<Route path="*" element={
