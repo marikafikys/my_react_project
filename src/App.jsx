@@ -18,6 +18,7 @@ export const App = () => {
 	const [pagePosts, setPagePosts] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageMode, setPageMode] = useState("home");
+	const [modalActive, setModalActive] = useState(false);
 
 	const navigate = useNavigate();
 	let countPosts = 1;
@@ -174,11 +175,40 @@ export const App = () => {
 	}
 
 	function handleEditPost(data, id) {
-		// console.log(data, id);
-
 		api.editPost(data, id)
 			.then((editPost) => {
 				navigate(`/post/${id}`);
+				api.getPostsList()
+				.then(data => {
+					let currentData = data;
+					if(pageMode === "home") {/* currentData не меняется */};
+					if (pageMode === "favorites") {currentData = filterFavoritesData(data)};
+					if (pageMode === "myPosts") {currentData = filterMyPostsData(data)};
+					setPagePosts(updatePageDelete(currentData, currentPage, postsPerPage));
+					setAllPosts(currentData);
+				})
+			})
+	}
+
+	function createPostComment(data, id) {
+		api.setPostComment(data, id)
+			.then((editPost) => {
+				setModalActive(false);
+				api.getPostsList()
+				.then(data => {
+					let currentData = data;
+					if(pageMode === "home") {/* currentData не меняется */};
+					if (pageMode === "favorites") {currentData = filterFavoritesData(data)};
+					if (pageMode === "myPosts") {currentData = filterMyPostsData(data)};
+					setPagePosts(updatePageDelete(currentData, currentPage, postsPerPage));
+					setAllPosts(currentData);
+				})
+			})
+	}
+
+	function deletePostComment(post_id, com_id) {
+		api.deletePostComment(post_id, com_id)
+			.then((editPost) => {
 				api.getPostsList()
 				.then(data => {
 					let currentData = data;
@@ -199,6 +229,7 @@ export const App = () => {
 				handleHomePage={handleHomePage}
 				handleFavorites={handleFavorites}
 				handleMyPosts={handleMyPosts}
+				pageMode={pageMode}
 			/>
 			<main className='container content'>
 				
@@ -226,6 +257,10 @@ export const App = () => {
 							handlePostLike={handlePostLike} 
 							handleDeletePost={handleDeletePost}
 							handleClickEdit={handleClickEdit}
+							active={modalActive}
+							setActive={setModalActive}
+							createPostComment={createPostComment}
+							deletePostComment={deletePostComment}
 						/>
 					}/>
 

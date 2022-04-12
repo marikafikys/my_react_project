@@ -1,14 +1,16 @@
 import { Button, Card, Tag, Timeline } from "antd";
-import React, {useContext} from "react";
+import React, {useState, useContext} from "react";
 import s from "./styles.module.css";
 import dayjs from "dayjs";
-import { HeartOutlined, HeartFilled, DeleteTwoTone, EditTwoTone, MessageTwoTone, ArrowLeftOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, DeleteTwoTone, EditTwoTone, MessageTwoTone, ArrowLeftOutlined, FrownOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { CurrentUserContext } from "../../context/currentUserContext";
 import { ButtonBack } from "../ButtonBack/ButtonBack";
+import { Modal } from "../Modal/Modal";
+import { CommentEl } from "../CommentEl/CommentEl";
 
 
-export const SelectedPost = ({ image, likes, tags, _id, title, text, created_at, updated_at, onPostLike, onDeletePost, onEditPost, author }) => {
+export const SelectedPost = ({ image, likes, comments, tags, _id, title, text, created_at, updated_at, onPostLike, onDeletePost, onEditPost, author, active, setActive, createPostComment, deletePostComment }) => {
 
 	const currentUser = useContext(CurrentUserContext);
 
@@ -25,6 +27,10 @@ export const SelectedPost = ({ image, likes, tags, _id, title, text, created_at,
 
 	function handleEditClik() {
 		onEditPost({_id})
+	}
+
+	function handleCommentClik() {
+		setActive(true)
 	}
 
 	return (
@@ -52,7 +58,7 @@ export const SelectedPost = ({ image, likes, tags, _id, title, text, created_at,
 		 			</Timeline>
 
 					 <div className={s.buttons}>
-					 	<Button className={s.button} type="text" onClick={() => console.log("Комментирование поста")} icon={<MessageTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Comment</Button>
+					 	<Button className={s.button} type="text" onClick={handleCommentClik} icon={<MessageTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Comment</Button>
 						{author._id == currentUser._id && <Button className={s.button} type="text" onClick={handleDeleteClik} icon={<DeleteTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Delete</Button>}
 						{author._id == currentUser._id && <Button className={s.button} type="text" onClick={handleEditClik} icon={<EditTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Edit</Button>}
 					</div>
@@ -72,9 +78,11 @@ export const SelectedPost = ({ image, likes, tags, _id, title, text, created_at,
 
 					
 			</div>
-			<div className={s.comments}>
 
-			</div>
+			<h2>Comments:</h2>
+			<Modal active={active} setActive={setActive} createPostComment={createPostComment} id={_id}/>
+			{comments.length == 0 && <p className={s.text__comment}>There are no comments here... <FrownOutlined /></p>}
+			{comments.length > 0 && comments.map(comment => <CommentEl key={comment._id} currentUser={currentUser} post_id={_id} comment={comment} com_id={comment._id} deletePostComment={deletePostComment}/>)}
 		</div>
 	)
 }

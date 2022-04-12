@@ -93,6 +93,34 @@ class Api {
 			body: JSON.stringify(postData)
 		}).then(onResponce)
 	}
+
+	getPostComments(postId) {
+		return fetch(`${this._baseUrl}/posts/comments/${postId}`, {
+			headers: {
+				authorization: this._token,
+			},
+		}).then(onResponce)
+	}
+
+	setPostComment(commentData, postId) {
+		return fetch(`${this._baseUrl}/posts/comments/${postId}`, {
+			method: "POST",
+			headers: {
+				authorization: this._token,
+				"Content-type": "application/json"
+			},
+			body: JSON.stringify(commentData)
+		}).then(onResponce)
+	}
+
+	deletePostComment(postId, commentId) {
+		return fetch(`${this._baseUrl}/posts/comments/${postId}/${commentId}`, {
+			method: "DELETE",
+			headers: {
+				authorization: this._token,
+			},
+		}).then(onResponce)
+	}
 }
 
 const config = {

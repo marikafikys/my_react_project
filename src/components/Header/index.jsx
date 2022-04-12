@@ -7,7 +7,7 @@ import { HeartOutlined, SmileOutlined , HomeOutlined, MailOutlined, UserOutlined
 import { CurrentUserContext } from "../../context/currentUserContext";
 import { useNavigate } from "react-router-dom";
 
-export const Header = ({onUpdateUser, onUpdateAvatar, handleHomePage, handleFavorites, handleMyPosts}) => {
+export const Header = ({onUpdateUser, onUpdateAvatar, handleHomePage, handleFavorites, handleMyPosts, pageMode}) => {
 
 	const currentUser = useContext(CurrentUserContext);
 	const navigate = useNavigate();
@@ -26,10 +26,10 @@ export const Header = ({onUpdateUser, onUpdateAvatar, handleHomePage, handleFavo
 		<header className={s.header}>
 			<div className={cn(s.wrapper, 'container')}>
 				<Logo/>
-				<div className={s.menu}>
-					<Button type="link" onClick={handleHomePage}>{<HomeOutlined />}Home</Button>
-					<Button type="link" onClick={handleFavorites}>{<HeartOutlined />}Favorites</Button>
-					<Button type="link" onClick={handleMyPosts}>{<SmileOutlined />}My posts</Button>
+				<div>
+					<Button className={s.menu} type={pageMode === "home" ? "dashed" : "link"} ghost onClick={handleHomePage}>{<HomeOutlined />}Home</Button>
+					<Button className={s.menu} type={pageMode === "favorites" ? "dashed" : "link"} ghost onClick={handleFavorites}>{<HeartOutlined />}Favorites</Button>
+					<Button className={s.menu} type={pageMode === "myPosts" ? "dashed" : "link"} ghost onClick={handleMyPosts}>{<SmileOutlined />}My posts</Button>
 				</div>
 				<div className={s.user}>
 					{currentUser.avatar && <img src={currentUser.avatar} alt="аватар" className={s.avatar}/>}

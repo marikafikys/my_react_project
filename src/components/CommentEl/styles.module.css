@@ -1,0 +1,19 @@
+.comment {
+	display: flex;
+	align-self:center;
+	margin: 15px 0;
+	border-top: 2px dotted var(--main-darker);
+	padding: 10px;
+}
+
+.text__comment {
+	font-size: 1rem;
+	margin-left: 20px;
+}
+
+.info__comment {
+	min-width: 300px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}

@@ -2,14 +2,15 @@ import { Button, Card, Tag, Timeline } from "antd";
 import React, { useContext } from "react";
 import s from "./styles.module.css";
 import dayjs from "dayjs";
-import { HeartOutlined, HeartFilled, DeleteTwoTone } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { HeartOutlined, HeartFilled, DeleteTwoTone, MessageTwoTone } from "@ant-design/icons";
+import { Link, useNavigate } from "react-router-dom";
 import { CurrentUserContext } from "../../context/currentUserContext";
 
 
-export const Post = ({image, likes, tags, _id, title, author, text, created_at, updated_at, onPostLike, onDeletePost}) => {
+export const Post = ({image, likes, comments, tags, _id, title, author, text, created_at, updated_at, onPostLike, onDeletePost}) => {
 
 	const currentUser = useContext(CurrentUserContext);
+	const navigate = useNavigate();
 
 	const isLiked = likes.some(id => id === currentUser._id);
 
@@ -22,7 +23,7 @@ export const Post = ({image, likes, tags, _id, title, author, text, created_at, 
 	}
 
 	return (
-		<Card title={<Button type="link">{title}</Button>} style={{ width: 300 }} hoverable='true'>
+		<Card title={<Button style={{fontSize: 18, fontWeight: 600}} type="link">{title}</Button>} style={{ width: 300 }} hoverable='true'>
 
 				<Link to={`/post/${_id}`} className={s.link}>
 					<div className={s.wrapper}>
@@ -50,6 +51,10 @@ export const Post = ({image, likes, tags, _id, title, author, text, created_at, 
 				<div className={s.like}>
 					<Button type="text" onClick={handlelikeClick} icon={isLiked ? <HeartFilled style={{fontSize: '20px', color: '#f02573'}}/> : <HeartOutlined style={{ fontSize: '20px', color: '#b1aeae'}}/>}></Button>
 					<span className={s.likeAmount}>{likes.length}</span>
+				</div>
+				<div className={s.comments}>
+					<Button className={s.button} type="text" onClick={() => navigate(`/post/${_id}`)} icon={<MessageTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}></Button>
+					<span className={s.likeAmount}>{comments.length}</span>
 				</div>
 				{author._id == currentUser._id && <Button type="text" onClick={handleDeleteClik} icon={<DeleteTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}/>}
 			</div>
