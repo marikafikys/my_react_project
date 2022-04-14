@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CurrentUserContext } from "../../context/currentUserContext";
 
 
-export const Post = ({image, likes, comments, tags, _id, title, author, text, created_at, updated_at, onPostLike, onDeletePost}) => {
+export const Post = ({image, likes, comments, tags, _id, title, author, text, created_at, updated_at, onPostLike, onDeletePost, active, setActive}) => {
 
 	const currentUser = useContext(CurrentUserContext);
 	const navigate = useNavigate();
@@ -22,8 +22,13 @@ export const Post = ({image, likes, comments, tags, _id, title, author, text, cr
 		onDeletePost({_id})
 	}
 
+	function handleComment() {
+		navigate(`/post/${_id}`);
+		setActive(true);
+	}
+
 	return (
-		<Card title={<Button style={{fontSize: 18, fontWeight: 600}} type="link">{title}</Button>} style={{ width: 300 }} hoverable='true'>
+		<Card title={<Link to={`/post/${_id}`} style={{fontSize: 18, fontWeight: 600}}>{title}</Link>} style={{ width: 300 }} hoverable='true'>
 
 				<Link to={`/post/${_id}`} className={s.link}>
 					<div className={s.wrapper}>
@@ -53,7 +58,7 @@ export const Post = ({image, likes, comments, tags, _id, title, author, text, cr
 					<span className={s.likeAmount}>{likes.length}</span>
 				</div>
 				<div className={s.comments}>
-					<Button className={s.button} type="text" onClick={() => navigate(`/post/${_id}`)} icon={<MessageTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}></Button>
+					<Button className={s.button} type="text" onClick={handleComment} icon={<MessageTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}></Button>
 					<span className={s.likeAmount}>{comments.length}</span>
 				</div>
 				{author._id == currentUser._id && <Button type="text" onClick={handleDeleteClik} icon={<DeleteTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}/>}

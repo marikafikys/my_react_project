@@ -1,6 +1,7 @@
 import { Button, Card, Tag, Timeline } from "antd";
 import React, {useState, useContext} from "react";
 import s from "./styles.module.css";
+import api from '../../utils/Api';
 import dayjs from "dayjs";
 import { HeartOutlined, HeartFilled, DeleteTwoTone, EditTwoTone, MessageTwoTone, ArrowLeftOutlined, FrownOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ import { CommentEl } from "../CommentEl/CommentEl";
 export const SelectedPost = ({ image, likes, comments, tags, _id, title, text, created_at, updated_at, onPostLike, onDeletePost, onEditPost, author, active, setActive, createPostComment, deletePostComment }) => {
 
 	const currentUser = useContext(CurrentUserContext);
+	let commentUser = {};
 
 	const navigate = useNavigate();
 	const isLiked = likes?.some(id => id === currentUser._id);
@@ -42,7 +44,10 @@ export const SelectedPost = ({ image, likes, comments, tags, _id, title, text, c
 					<div>
 						<div className={s.author}>
 							<img src={author?.avatar} alt="аватар" className={s.avatar}/> 
-							<span className={s.email}>{author?.email}</span>
+							<span className={s.name_email}>
+								<div className={s.name}>{author?.name}</div>
+								<div>{author?.email}</div>
+							</span>
 						</div>
 						<div className={s.tags}>
 							<p>Tags:</p>
@@ -57,32 +62,36 @@ export const SelectedPost = ({ image, likes, comments, tags, _id, title, text, c
 		 				<Timeline.Item color='var(--button-darker)'>Last edit: {dayjs(updated_at).format('HH:MM:ss DD/MM/YYYY')}</Timeline.Item>
 		 			</Timeline>
 
-					 <div className={s.buttons}>
+					<p className={s.text}><img src={image} className={s.image}/>{text}</p>
+
+					<div className={s.buttons}>
 					 	<Button className={s.button} type="text" onClick={handleCommentClik} icon={<MessageTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Comment</Button>
 						{author._id == currentUser._id && <Button className={s.button} type="text" onClick={handleDeleteClik} icon={<DeleteTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Delete</Button>}
 						{author._id == currentUser._id && <Button className={s.button} type="text" onClick={handleEditClik} icon={<EditTwoTone twoToneColor="#b1aeae" style={{ fontSize: '20px'}}/>}>Edit</Button>}
 					</div>
 
-
-					<div className={s.like}>
-						<span>{isLiked ? "In favorites" : "To favourites"}</span>
-						<div>
-							<Button type="text" onClick={handlelikeClick} icon={isLiked ? <HeartFilled style={{fontSize: '20px', color: '#f02573'}}/> : <HeartOutlined style={{ fontSize: '20px', color: '#b1aeae'}}/>}></Button>
-							<span className={s.likeAmount}>{likes?.length}</span>
+					<div className={s.wrapper}>
+						<div className={s.like}>
+							<span>{isLiked ? "In favorites" : "To favourites"}</span>
+							<div>
+								<Button type="text" onClick={handlelikeClick} icon={isLiked ? <HeartFilled style={{fontSize: '20px', color: '#f02573'}}/> : <HeartOutlined style={{ fontSize: '20px', color: '#b1aeae'}}/>}></Button>
+								<span className={s.likeAmount}>{likes?.length}</span>
+							</div>
 						</div>
-		 			</div>
-
-					<img src={image} className={s.image}/>
-
-					<p className={s.text}>{text}</p>
-
-					
+					</div>		
 			</div>
 
 			<h2>Comments:</h2>
 			<Modal active={active} setActive={setActive} createPostComment={createPostComment} id={_id}/>
 			{comments.length == 0 && <p className={s.text__comment}>There are no comments here... <FrownOutlined /></p>}
-			{comments.length > 0 && comments.map(comment => <CommentEl key={comment._id} currentUser={currentUser} post_id={_id} comment={comment} com_id={comment._id} deletePostComment={deletePostComment}/>)}
+			{comments.length > 0 && comments.map(comment => 
+				<CommentEl 
+					key={comment._id} 
+					currentUser={currentUser}
+					post_id={_id} 
+					comment={comment} 
+					com_id={comment._id} 
+					deletePostComment={deletePostComment}/>)}
 		</div>
 	)
 }

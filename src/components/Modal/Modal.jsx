@@ -9,13 +9,13 @@ export function Modal({active, setActive, createPostComment, id}) {
 			className={cn("modal", {
 			"active": active
 			})} 
-			onClick={() => setActive(false)}
+			onMouseDown={() => setActive(false)}
 		>
 			<div 
 				className={cn("modal__content", {
 					"active": active
 					})}  
-				onClick={(e)=> e.stopPropagation()}
+					onMouseDown={(e)=> e.stopPropagation()}
 			>
 				<AddCommentForm createPostComment={createPostComment} id={id}/>
 			</div>

@@ -1,11 +1,9 @@
 @import "~normalize.css";
 
 :root {
-	--main-color: #4ddbff;
+	--main-color: #04c9fa;
 	--main-darker: #09738d;
 	--main-lighter: #aeebfa;
-	--button-color: #9f33f8;
-	--button-darker: #6e0dbd;
 }
 
 * {

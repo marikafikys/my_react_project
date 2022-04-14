@@ -62,12 +62,12 @@ export function EditPostForm({editPostData, editPost, id}) {
                         defaultValue={editPostData?.image}
                     />
                 </label>
-                <label>Enter new tags:
+                <label>Enter new tags (separate tags with spaces):
                     <input className={s.input} 
                         onChange={onChange} 
                         type="text"
                         {...register('tags')}
-                        placeholder="Enter tags"
+                        placeholder="Enter tags (separate tags with spaces)"
                         defaultValue={editPostData?.tags.join(" ")}
                     />
                 </label>

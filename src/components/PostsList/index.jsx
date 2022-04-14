@@ -3,8 +3,7 @@ import "./styles.css";
 import { Post } from "../Post";
 import { Pagination } from "antd";
 
-export const PostsList = ({pagePosts, data,  
-	postsPerPage, onPostLike, countPosts, currentPage, onChangePage, handleDeletePost}) => {
+export const PostsList = ({pagePosts, data, postsPerPage, onPostLike, countPosts, currentPage, onChangePage, handleDeletePost, active, setActive}) => {
 	const handlePageChange = (current, pageSize) => {
 		let newPageData = data.slice(pageSize*(current-1), pageSize*current);
 		onChangePage(newPageData, current, pageSize);
@@ -13,7 +12,14 @@ export const PostsList = ({pagePosts, data,
 	return (
 		<>
 		<div className="postsList">
-			{pagePosts.map(el => <Post key={el._id} {...el} onPostLike={onPostLike} onDeletePost={handleDeletePost} />)}
+			{pagePosts.map(el => 
+			<Post 
+				key={el._id} 
+				{...el} 
+				onPostLike={onPostLike} 
+				onDeletePost={handleDeletePost} 
+				active={active} 
+				setActive={setActive}/>)}
 		</div>
 		<div className="pagination">
 			<Pagination 

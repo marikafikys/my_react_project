@@ -53,11 +53,14 @@ export const App = () => {
 
 	function handleFavorites() {
 		setPageMode("favorites");
-		const filteredFavoritesData = filterFavoritesData(allPosts);
-		let pageFavPosts = filteredFavoritesData.slice(0, postsPerPage);
-		setAllPosts(filteredFavoritesData);
-		setPagePosts(pageFavPosts);
-		navigate("/");
+		api.getPostsList()
+			.then(allPosts => {
+			const filteredFavoritesData = filterFavoritesData(allPosts);
+			let pageFavPosts = filteredFavoritesData.slice(0, postsPerPage);
+			setAllPosts(filteredFavoritesData);
+			setPagePosts(pageFavPosts);
+			navigate("/");
+		})
 	}
 
 	function filterMyPostsData (data) {
@@ -66,12 +69,15 @@ export const App = () => {
 
 	function handleMyPosts () {
 		setPageMode("myPosts");
-		let filteredMyPostsData = filterMyPostsData(allPosts);
-		// console.log(filteredMyPostsData);
-		let pageMyPosts = filteredMyPostsData.slice(0, postsPerPage);
-		setAllPosts(filteredMyPostsData);
-		setPagePosts(pageMyPosts);
-		navigate("/");
+		api.getPostsList()
+			.then(allPosts => {
+			let filteredMyPostsData = filterMyPostsData(allPosts);
+			// console.log(filteredMyPostsData);
+			let pageMyPosts = filteredMyPostsData.slice(0, postsPerPage);
+			setAllPosts(filteredMyPostsData);
+			setPagePosts(pageMyPosts);
+			navigate("/");
+		})
 	}
 
 	function onChangePage(newPageData, current, pageSize) {
@@ -248,6 +254,8 @@ export const App = () => {
 							countPosts={countPosts} 
 							handleClickCreate={handleClickCreate}
 							pageMode={pageMode}
+							active={modalActive}
+							setActive={setModalActive}
 						/>
 					}/>
 

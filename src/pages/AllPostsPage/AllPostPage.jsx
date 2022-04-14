@@ -4,7 +4,7 @@ import React from 'react';
 import { PostsList } from '../../components/PostsList';
 import { Spinner } from '../../components/Spinner';
 
-export const AllPostPage = ({isLoading, data, postsPerPage, pagePosts, currentPage, handlePostLike, handleDeletePost, onChangePage, countPosts, handleClickCreate, pageMode}) => {
+export const AllPostPage = ({isLoading, data, postsPerPage, pagePosts, currentPage, handlePostLike, handleDeletePost, onChangePage, countPosts, handleClickCreate, pageMode, active, setActive}) => {
 
 	return (
 		<>
@@ -38,6 +38,8 @@ export const AllPostPage = ({isLoading, data, postsPerPage, pagePosts, currentPa
 						onPostLike={handlePostLike}
 						handleDeletePost={handleDeletePost}
 						countPosts={countPosts}
+						active={active}
+						setActive={setActive}
 						currentPage = {currentPage} // отправляю индекс текущей страницы для корректной работы пагинации при удалении постов
 						/>
 				</div>

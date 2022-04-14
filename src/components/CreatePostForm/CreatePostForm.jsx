@@ -59,12 +59,12 @@ export function CreatePostForm({createNewPost}) {
                         placeholder="Enter image link"
                     />
                 </label>
-                <label>Enter tags:
+                <label>Enter tags (separate tags with spaces):
                     <input className={s.input} 
                     onChange={onChange} 
                         type="text"
                         {...register('tags')}
-                        placeholder="Enter tags"
+                        placeholder="Enter tags (separate tags with spaces)"
                     />
                 </label>
                 <Button type="primary" className={s.button} onClick={handleSubmit(onSubmit)}>Save</Button>
